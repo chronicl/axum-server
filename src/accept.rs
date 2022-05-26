@@ -14,7 +14,7 @@ pub trait Accept<I, S> {
     type Service;
 
     /// Future return value.
-    type Future: Future<Output = io::Result<(Self::Stream, Self::Service)>>;
+    type Future: Future<Output = io::Result<Option<(Self::Stream, Self::Service)>>>;
 
     /// Process io stream and service asynchronously.
     fn accept(&self, stream: I, service: S) -> Self::Future;
@@ -34,9 +34,9 @@ impl DefaultAcceptor {
 impl<I, S> Accept<I, S> for DefaultAcceptor {
     type Stream = I;
     type Service = S;
-    type Future = Ready<io::Result<(Self::Stream, Self::Service)>>;
+    type Future = Ready<io::Result<Option<(Self::Stream, Self::Service)>>>;
 
     fn accept(&self, stream: I, service: S) -> Self::Future {
-        std::future::ready(Ok((stream, service)))
+        std::future::ready(Ok(Some((stream, service))))
     }
 }

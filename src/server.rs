@@ -139,7 +139,8 @@ impl<A> Server<A> {
                 let http_conf = http_conf.clone();
 
                 tokio::spawn(async move {
-                    if let Ok((stream, send_service)) = acceptor.accept(addr_stream, service).await
+                    if let Ok(Some((stream, send_service))) =
+                        acceptor.accept(addr_stream, service).await
                     {
                         let service = send_service.into_service();
 
